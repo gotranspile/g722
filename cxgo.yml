@@ -1,0 +1,97 @@
+package: g722
+subpackage: true
+vcs: https://github.com/dgoncharov/g722tools.git
+branch: 'master'
+root: ./src
+out: .
+int_size: 8
+ptr_size: 8
+use_go_int: true
+unexported_fields: true
+predef: |
+  #include <stdint.h>
+replace:
+  - old: libc.BoolToInt
+    new: bool2int
+  - old: int(bool2int(FALSE == 0))
+    new: true
+  - old: FALSE == 0
+    new: true
+  - old: FALSE != 0
+    new: false
+  - old: FALSE
+    new: false
+idents:
+  - name: G722_SAMPLE_RATE_8000
+    rename: FlagSampleRate8000
+  - name: G722_PACKED
+    rename: FlagPacked
+  - name: g722_decode_state_t
+    rename: Decoder
+    fields:
+      - name: itu_test_mode
+        rename: ituTestMode
+        type: bool
+      - name: packed
+        type: bool
+      - name: eight_k
+        rename: eightK
+        type: bool
+      - name: bits_per_sample
+        rename: bitsPerSample
+      - name: in_buffer
+        rename: inBuffer
+      - name: in_bits
+        rename: inBits
+      - name: out_buffer
+        rename: outBuffer
+      - name: out_bits
+        rename: outBits
+  - name: g722_encode_state_t
+    rename: Encoder
+    fields:
+      - name: itu_test_mode
+        rename: ituTestMode
+        type: bool
+      - name: packed
+        type: bool
+      - name: eight_k
+        rename: eightK
+        type: bool
+      - name: bits_per_sample
+        rename: bitsPerSample
+      - name: in_buffer
+        rename: inBuffer
+      - name: in_bits
+        rename: inBits
+      - name: out_buffer
+        rename: outBuffer
+      - name: out_bits
+        rename: outBits
+  - name: g722_decode
+    rename: decode
+  - name: g722_encode
+    rename: encode
+  - name: g722_decode_init
+    rename: decoderInit
+  - name: g722_encode_init
+    rename: encoderInit
+files:
+  - name: g722.h
+  - name: g722_decode.c
+    skip:
+      - TRUE
+      - FALSE
+      - g722_decode_release
+    idents:
+    - name: block4
+      rename: decodeBlock4
+  - name: g722_encode.c
+    skip:
+      - TRUE
+      - FALSE
+      - saturate
+      - g722_encode_release
+    idents:
+    - name: block4
+      rename: encodeBlock4
