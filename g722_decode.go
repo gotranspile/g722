@@ -292,13 +292,13 @@ func decode(s *Decoder, amp []int16, g722_data []uint8, len_ int) int {
 					x := *p
 					*p++
 					return x
-				}()] = int16(xout1 >> 11)
+				}()] = saturate(int32(xout1 >> 11))
 				amp[func() int {
 					p := &outlen
 					x := *p
 					*p++
 					return x
-				}()] = int16(xout2 >> 11)
+				}()] = saturate(int32(xout2 >> 11))
 			}
 		}
 	}
